@@ -1,0 +1,203 @@
+# ========================================
+# Maven
+# ========================================
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# ========================================
+# Java Build Files
+# ========================================
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid*
+
+# ========================================
+# IntelliJ IDEA
+# ========================================
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+.idea_modules/
+
+# ========================================
+# Eclipse
+# ========================================
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+.metadata/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~
+local.properties
+.loadpath
+.recommenders
+.buildpath
+.target
+.externalToolBuilders/
+*.launch
+
+# ========================================
+# NetBeans
+# ========================================
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# ========================================
+# VS Code
+# ========================================
+.vscode/
+*.code-workspace
+.history/
+
+# ========================================
+# Operating System Files
+# ========================================
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE_BIN/
+*.lnk
+
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ========================================
+# Logs
+# ========================================
+*.log
+logs/
+*.log.*
+
+# ========================================
+# Database / Local Data
+# ========================================
+*.sql.bak
+*.db
+*.sqlite
+*.sqlite3
+
+# ========================================
+# Sensitive Configuration Files
+# ========================================
+src/main/resources/database.properties
+src/main/resources/application.properties
+src/main/resources/config.properties
+*-local.properties
+*.env
+.env
+.env.local
+.env.production
+
+# ========================================
+# Uploads / User Generated Content
+# Keep folders, ignore uploaded files
+# ========================================
+src/main/webapp/assets/uploads/*
+!src/main/webapp/assets/uploads/.gitkeep
+
+src/main/webapp/assets/uploads/items/*
+!src/main/webapp/assets/uploads/items/.gitkeep
+
+src/main/webapp/assets/uploads/profiles/*
+!src/main/webapp/assets/uploads/profiles/.gitkeep
+
+# ========================================
+# Testing / Coverage
+# ========================================
+test-output/
+*.cover
+.coverage
+htmlcov/
+
+# ========================================
+# Gradle / Other Build Tools
+# ========================================
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+.kotlin/
+
+# ========================================
+# Tomcat
+# ========================================
+tomcat.*/
+work/
+
+# ========================================
+# Backup Files
+# ========================================
+*.backup
+*.old
+*_backup
+*_old
+*.orig
+
+# ========================================
+# AI / Planning / Draft Documentation
+# Avoid uploading generated planning files
+# ========================================
+*.md
+!README.md
+*.txt
+*prompt*
+*Prompt*
+*audit*
+*Audit*
+*template*
+*Template*
+FOUNDATION_COMPLETE.md
+
+# ========================================
+# Miscellaneous
+# ========================================
+.cache/
+node_modules/
+package-lock.json
+yarn.lock

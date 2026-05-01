@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+         https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+
+    <!-- Application Lifecycle Listener — cleans up MySQL JDBC resources on shutdown -->
+    <listener>
+        <listener-class>com.unitrade.util.AppContextListener</listener-class>
+    </listener>
+
+    <!-- Application Display Name -->
+    <display-name>UniTrade - Student Marketplace Platform</display-name>
+
+    <!-- Application Description -->
+    <description>
+        UniTrade is a student marketplace and peer service platform for college students in Nepal.
+        Students can buy, sell, and trade items within their campus community.
+    </description>
+
+    <!-- Welcome File List -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+    <!-- Session Configuration -->
+    <session-config>
+        <!-- Session timeout in minutes (30 minutes) -->
+        <session-timeout>30</session-timeout>
+        <!-- Cookie configuration -->
+        <cookie-config>
+            <http-only>true</http-only>
+            <secure>false</secure> <!-- Set to true in production with HTTPS -->
+        </cookie-config>
+        <!-- Session tracking mode -->
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
+    <!-- Error Pages -->
+    <!-- 400 Bad Request -->
+    <error-page>
+        <error-code>400</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+
+    <!-- 401 Unauthorized -->
+    <error-page>
+        <error-code>401</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+
+    <!-- 403 Forbidden -->
+    <error-page>
+        <error-code>403</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+
+    <!-- 404 Not Found -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+
+    <!-- 500 Internal Server Error -->
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+
+    <!-- Generic Exception -->
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/error.jsp</location>
+    </error-page>
+
+    <!-- JSP Configuration -->
+    <jsp-config>
+        <jsp-property-group>
+            <url-pattern>*.jsp</url-pattern>
+            <page-encoding>UTF-8</page-encoding>
+            <scripting-invalid>false</scripting-invalid>
+        </jsp-property-group>
+    </jsp-config>
+
+
+</web-app>
