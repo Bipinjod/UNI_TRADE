@@ -69,7 +69,7 @@
         <!-- Form Card -->
         <div class="form-page-layout">
             <div class="form-card">
-                <form method="post" action="${pageContext.request.contextPath}/user/items" class="item-form">
+                <form method="post" action="${pageContext.request.contextPath}/user/items" class="item-form" enctype="multipart/form-data">
 
                     <c:choose>
                         <c:when test="${not empty item}">
@@ -169,18 +169,30 @@
                             <div class="form-hint">Enter 0 for free items</div>
                         </div>
                         <div class="form-group">
-                            <label for="imagePath" class="form-label">
-                                Image Path
+                            <label for="itemImage" class="form-label">
+                                Item Image
                             </label>
+                            <%-- Show existing image preview when editing --%>
+                            <c:if test="${not empty item and not empty item.imagePath}">
+                                <div class="upload-preview-wrapper">
+                                    <img src="${pageContext.request.contextPath}/assets/uploads/${item.imagePath}"
+                                         alt="Current image" class="upload-preview-img">
+                                    <span class="upload-preview-label">Current image</span>
+                                </div>
+                            </c:if>
                             <input
-                                type="text"
-                                id="imagePath"
-                                name="imagePath"
-                                class="form-input"
-                                placeholder="e.g. item-photo.jpg"
-                                value="${not empty item ? item.imagePath : ''}"
+                                type="file"
+                                id="itemImage"
+                                name="itemImage"
+                                class="form-input-file"
+                                accept="image/png,image/jpeg,image/webp"
                             >
-                            <div class="form-hint">Filename only (uploads handled separately)</div>
+                            <div class="form-hint">
+                                JPG, PNG or WebP, max 5 MB.
+                                <c:if test="${not empty item and not empty item.imagePath}">
+                                    Leave blank to keep the current image.
+                                </c:if>
+                            </div>
                         </div>
                     </div>
 

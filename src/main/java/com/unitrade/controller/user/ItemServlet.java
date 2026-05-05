@@ -6,14 +6,21 @@ import com.unitrade.model.Item;
 import com.unitrade.model.User;
 import com.unitrade.service.ItemService;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 /**
@@ -21,6 +28,11 @@ import java.util.List;
  * Handles browsing, viewing, adding, editing, and deleting items
  * Uses action parameter to determine operation
  */
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024,     // 1 MB — buffer to disk above this
+    maxFileSize       = 5 * 1024 * 1024, // 5 MB per file
+    maxRequestSize    = 10 * 1024 * 1024 // 10 MB total request
+)
 @WebServlet("/user/items")
 public class ItemServlet extends HttpServlet {
 
@@ -300,23 +312,28 @@ public class ItemServlet extends HttpServlet {
      * Handle add item - Process add item form
      */
     private void handleAddItem(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-            throws IOException {
+            throws IOException, ServletException {
 
         User loggedInUser = (User) session.getAttribute("loggedInUser");
 
         if (loggedInUser == null) {
-            // FIX: was /login.jsp
             response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
         // Get form parameters
         String categoryIdStr = request.getParameter("categoryId");
-        String title = request.getParameter("title");
-        String description = request.getParameter("description");
-        String priceStr = request.getParameter("price");
+        String title         = request.getParameter("title");
+        String description   = request.getParameter("description");
+        String priceStr      = request.getParameter("price");
         String itemCondition = request.getParameter("itemCondition");
-        String imagePath = request.getParameter("imagePath"); // In real app, handle file upload
+
+        // Handle image upload
+        String imagePath = processImageUpload(request, session);
+        if ("ERROR".equals(imagePath)) {
+            response.sendRedirect(request.getContextPath() + "/user/items?action=add");
+            return;
+        }
 
         // Create item object
         Item item = new Item();
@@ -346,7 +363,7 @@ public class ItemServlet extends HttpServlet {
         item.setPrice(price);
 
         item.setItemCondition(itemCondition);
-        item.setImagePath(imagePath != null && !imagePath.isEmpty() ? imagePath : null);
+        item.setImagePath(imagePath); // null is fine when no image is uploaded
 
         // Add item using service
         String result = itemService.addItem(item);
@@ -364,24 +381,22 @@ public class ItemServlet extends HttpServlet {
      * Handle edit item - Process edit item form
      */
     private void handleEditItem(HttpServletRequest request, HttpServletResponse response, HttpSession session)
-            throws IOException {
+            throws IOException, ServletException {
 
         User loggedInUser = (User) session.getAttribute("loggedInUser");
 
         if (loggedInUser == null) {
-            // FIX: was /login.jsp
             response.sendRedirect(request.getContextPath() + "/auth/login");
             return;
         }
 
         // Get form parameters
-        String itemIdStr = request.getParameter("itemId");
+        String itemIdStr     = request.getParameter("itemId");
         String categoryIdStr = request.getParameter("categoryId");
-        String title = request.getParameter("title");
-        String description = request.getParameter("description");
-        String priceStr = request.getParameter("price");
+        String title         = request.getParameter("title");
+        String description   = request.getParameter("description");
+        String priceStr      = request.getParameter("price");
         String itemCondition = request.getParameter("itemCondition");
-        String imagePath = request.getParameter("imagePath");
 
         // Validate item ID
         if (itemIdStr == null) {
@@ -398,6 +413,18 @@ public class ItemServlet extends HttpServlet {
                 session.setAttribute("error", "You don't have permission to edit this item");
                 response.sendRedirect(request.getContextPath() + "/user/items?action=my-listings");
                 return;
+            }
+
+            // Determine final image path: upload new file, or keep existing
+            String imagePath = processImageUpload(request, session);
+            if ("ERROR".equals(imagePath)) {
+                response.sendRedirect(request.getContextPath() + "/user/items?action=edit&itemId=" + itemId);
+                return;
+            }
+            if (imagePath == null) {
+                // No new file uploaded — preserve existing imagePath from DB
+                Item existing = itemService.getItemById(itemId);
+                imagePath = (existing != null) ? existing.getImagePath() : null;
             }
 
             // Create item object
@@ -417,7 +444,7 @@ public class ItemServlet extends HttpServlet {
             item.setPrice(price);
 
             item.setItemCondition(itemCondition);
-            item.setImagePath(imagePath != null && !imagePath.isEmpty() ? imagePath : null);
+            item.setImagePath(imagePath);
 
             // Update item using service
             String result = itemService.updateItem(item);
@@ -476,5 +503,85 @@ public class ItemServlet extends HttpServlet {
 
         response.sendRedirect(request.getContextPath() + "/user/items?action=my-listings");
     }
+
+    /**
+     * Process the itemImage multipart upload.
+     *
+     * @return the relative DB path  "items/filename.ext",
+     *         null  if no file was submitted,
+     *         "ERROR" if validation failed (error already stored in session).
+     */
+    private String processImageUpload(HttpServletRequest request, HttpSession session)
+            throws IOException, ServletException {
+
+        Part filePart = request.getPart("itemImage");
+
+        // No file or empty file — caller decides what to do
+        if (filePart == null || filePart.getSize() == 0) {
+            return null;
+        }
+
+        // --- Size validation ---
+        if (filePart.getSize() > 5L * 1024 * 1024) {
+            session.setAttribute("error", "Image file is too large. Maximum allowed size is 5 MB.");
+            return "ERROR";
+        }
+
+        // --- Extract and sanitise the original filename ---
+        String submittedName = filePart.getSubmittedFileName();
+        if (submittedName == null || submittedName.trim().isEmpty()) {
+            return null;
+        }
+        // Use Paths to strip any path separators a browser might include
+        submittedName = Paths.get(submittedName).getFileName().toString();
+
+        int dotIndex = submittedName.lastIndexOf('.');
+        String ext = (dotIndex >= 0) ? submittedName.substring(dotIndex + 1).toLowerCase() : "";
+
+        // --- Extension validation ---
+        if (!ext.equals("jpg") && !ext.equals("jpeg") && !ext.equals("png") && !ext.equals("webp")) {
+            session.setAttribute("error", "Invalid file type. Only JPG, PNG, and WebP images are allowed.");
+            return "ERROR";
+        }
+
+        // --- MIME type validation ---
+        String mime = filePart.getContentType();
+        if (mime == null
+                || (!mime.equals("image/jpeg")
+                    && !mime.equals("image/png")
+                    && !mime.equals("image/webp"))) {
+            session.setAttribute("error", "Invalid file type. Only image files are allowed.");
+            return "ERROR";
+        }
+
+        // --- Build a safe unique filename ---
+        String baseName = (dotIndex > 0) ? submittedName.substring(0, dotIndex) : submittedName;
+        baseName = baseName.replaceAll("[^a-zA-Z0-9._-]", "").toLowerCase();
+        if (baseName.isEmpty()) {
+            baseName = "item";
+        }
+        // Truncate base name to avoid excessively long filenames
+        if (baseName.length() > 40) {
+            baseName = baseName.substring(0, 40);
+        }
+        String uniqueFileName = System.currentTimeMillis() + "-" + baseName + "." + ext;
+
+        // --- Resolve and create upload directory ---
+        String uploadDirPath = getServletContext().getRealPath("/assets/uploads/items/");
+        File uploadDir = new File(uploadDirPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+
+        // --- Write the file ---
+        File dest = new File(uploadDir, uniqueFileName);
+        try (InputStream in = filePart.getInputStream()) {
+            Files.copy(in, dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
+
+        // Store only the relative path (no /assets/uploads/ prefix)
+        return "items/" + uniqueFileName;
+    }
 }
+
 
