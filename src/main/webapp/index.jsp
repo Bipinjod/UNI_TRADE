@@ -210,8 +210,9 @@
         .mock-desc {
             font-size: 0.72rem; color: var(--gray-500); margin-bottom: 0.65rem;
         }
-        .mock-footer {
+        .foot-bottom {
             display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 0.5rem;
         }
         .mock-price {
             font-size: 1.05rem; font-weight: 800; color: var(--primary-dark); letter-spacing: -0.3px;
@@ -313,7 +314,7 @@
             padding: 4.5rem 2rem 4rem;
         }
         .feat-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem;
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem;
             margin-top: 2.5rem;
         }
         .feat-card {
@@ -394,7 +395,7 @@
             padding: 2.5rem;
             background: var(--primary-dark); border-radius: 10px;
             display: flex; align-items: center; justify-content: space-between;
-            gap: 1.5rem;
+            gap: 1.5rem; flex-wrap: wrap;
         }
         .bottom-cta h2 {
             font-size: 1.25rem; font-weight: 800; color: var(--white);
@@ -447,6 +448,11 @@
             display: flex; align-items: center; justify-content: space-between;
             font-size: 0.72rem; color: var(--gray-400);
         }
+
+        /* ─── CTA SECTION WRAPPER ─── */
+        .cta-wrap-section { padding: 0 2rem; }
+        @media (max-width: 768px) { .cta-wrap-section { padding: 0 1.25rem; } }
+        @media (max-width: 576px) { .cta-wrap-section { padding: 0 1rem; } }
 
         /* ─── RESPONSIVE ─── */
         /* --- Mobile nav hamburger --- */
@@ -619,7 +625,7 @@
         <div class="sec-label">How it works</div>
         <h2 class="sec-h2">List, discover, trade &mdash; in minutes</h2>
         <p class="sec-sub">No middlemen, no fees. Just students helping students on campus.</p>
-        <div class="how-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;">
+        <div class="how-grid">
             <div class="how-step">
                 <div class="step-num">1</div>
                 <h4>Create your account</h4>
@@ -645,7 +651,7 @@
         <div class="sec-label">Why UniTrade</div>
         <h2 class="sec-h2">Everything you need, nothing you don't</h2>
         <p class="sec-sub">Built specifically for how Nepali college students actually trade.</p>
-        <div class="feat-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:2rem;">
+        <div class="feat-grid">
             <div class="feat-card">
                 <div class="feat-icon fi-1">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
@@ -680,7 +686,7 @@
     <!-- CATEGORIES -->
     <section class="cats">
         <div class="cats-h3">Popular categories</div>
-        <div class="cats-row" style="display:flex;flex-wrap:wrap;gap:1rem;">
+        <div class="cats-row">
             <span class="cat-chip">Textbooks</span>
             <span class="cat-chip">Electronics</span>
             <span class="cat-chip">Lab Equipment</span>
@@ -698,7 +704,7 @@
     <section class="trust">
         <div class="sec-label">Trusted by students</div>
         <h2 class="sec-h2">What students are saying</h2>
-        <div class="trust-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;">
+        <div class="trust-grid">
             <div class="trust-card">
                 <p class="trust-quote">"Sold my entire semester's worth of textbooks in two days. Way better than posting in random Facebook groups."</p>
                 <div class="trust-author">
@@ -733,8 +739,8 @@
     </section>
 
     <!-- BOTTOM CTA -->
-    <section style="padding: 0 2rem 0;">
-        <div class="bottom-cta" style="display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;">
+    <section class="cta-wrap-section">
+        <div class="bottom-cta">
             <div>
                 <h2>Ready to start trading?</h2>
                 <p>Create a free account and list your first item today.</p>
@@ -748,7 +754,7 @@
     <!-- FOOTER -->
     <footer class="foot">
         <div class="foot-inner">
-            <div class="foot-top" style="display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:2rem;">
+            <div class="foot-top">
                 <div>
                     <div class="foot-brand"><span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block;"></span> UniTrade</div>
                     <p class="foot-tagline">A student-to-student marketplace built for Nepali college campuses. Trade smarter, spend less.</p>
@@ -770,7 +776,7 @@
                     <a href="mailto:support@unitrade.edu.np">Email Us</a>
                 </div>
             </div>
-            <div class="foot-bottom" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;">
+            <div class="foot-bottom">
                 <span>&copy; 2026 UniTrade. All rights reserved.</span>
                 <span>Made with care in Nepal</span>
             </div>

@@ -10,14 +10,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
         body {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #FAFAFA; color: #1a1a2e;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
         }
+        img, svg, video { max-width: 100%; height: auto; display: block; }
         a { text-decoration: none; color: inherit; }
+        /* Nav logo image sizing */
+        .nav-logo img, .brand-logo-img {
+            height: 36px; width: auto; max-width: 160px;
+            object-fit: contain; flex-shrink: 0; display: block;
+        }
         ::selection { background: rgba(233,69,96,0.15); }
         :root {
             --navy: #1a1a2e; --accent: #e94560; --bg: #FAFAFA;
@@ -245,6 +252,16 @@
             .page-header { padding: 4.5rem 1rem 1.5rem; }
             .page-lead { font-size: 0.84rem; }
             .contact, .faq { padding: 2rem 1rem; }
+            .nav-logo img, .brand-logo-img { height: 28px; max-width: 120px; }
+        }
+        @media (max-width: 375px) {
+            .nav-inner { padding: 0 0.875rem; height: 48px; }
+            .nav-signin { display: none; }
+            .nav-cta { padding: 0.3rem 0.625rem; font-size: 0.7rem; }
+            .nav-logo img, .brand-logo-img { height: 24px; max-width: 100px; }
+            .page-header { padding: 4rem 0.875rem 1.25rem; }
+            .page-h1 { font-size: 1.375rem; }
+            .contact, .faq { padding: 1.75rem 0.875rem; }
         }
     </style>
 </head>

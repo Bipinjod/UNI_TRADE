@@ -122,9 +122,12 @@
     transition: all .25s ease;
     transform-origin: center;
 }
-.nav-toggle.toggle--active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.nav-toggle.toggle--active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-.nav-toggle.toggle--active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.nav-toggle.toggle--active span:nth-child(1),
+.nav-toggle.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.toggle--active span:nth-child(2),
+.nav-toggle.active span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-toggle.toggle--active span:nth-child(3),
+.nav-toggle.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 /* Nav links */
 .user-nav .nav-links {
     display: flex;
@@ -417,7 +420,8 @@ a.btn-primary:hover,
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: .05em;
-    white-space: nowrap;
+    white-space: normal;
+    word-break: break-word;
 }
 /* ============================================================
    6. SECTION LAYOUT
@@ -959,4 +963,20 @@ a.btn-primary:hover,
     .search-bar-card { padding: .75rem; }
     .search-input    { padding: .625rem .875rem .625rem 2.75rem; font-size: .875rem; }
     .filter-select   { padding: .625rem 2rem .625rem .875rem; font-size: .875rem; }
+}
+/* --- Very small phones (375px and below) --- */
+@media (max-width: 375px) {
+    .nav-container   { height: 54px; }
+    .page-wrapper    { padding: .75rem .75rem 3rem; }
+    .dash-hero       { padding: 1.125rem 1rem; }
+    .dash-greeting   { font-size: 1.25rem; }
+    .snapshot-grid   { grid-template-columns: repeat(2, 1fr); gap: .5rem; }
+    .snapshot-num    { font-size: 1.125rem; }
+    .acard-grid      { grid-template-columns: 1fr; gap: .625rem; }
+    .acard           { padding: .875rem .75rem; }
+    .acard-title     { white-space: normal; }
+    .page-header .page-title { font-size: 1.1875rem; }
+    .items-grid      { grid-template-columns: 1fr; }
+    .wishlist-grid   { grid-template-columns: 1fr; }
+    .search-input-wrapper { min-width: 0; }
 }
