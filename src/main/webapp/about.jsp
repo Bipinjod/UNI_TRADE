@@ -290,7 +290,6 @@
             <div class="nav-left">
                 <a href="${pageContext.request.contextPath}/" class="nav-logo">
                     <img src="${pageContext.request.contextPath}/assets/images/unitrade-logo.svg" alt="UniTrade logo" class="brand-logo-img">
-                    UniTrade
                 </a>
                 <div class="nav-links">
                     <a href="${pageContext.request.contextPath}/">Home</a>

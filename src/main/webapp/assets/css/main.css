@@ -1,67 +1,53 @@
 /* ============================================================
    BRAND LOGO — shared across all navbars and sidebars
    ============================================================ */
-
-/* Public / user top-nav logo (nav-logo class) */
+/* Public / user top-nav logo */
 .nav-logo {
     display: inline-flex;
     align-items: center;
-    gap: 0.55rem;
     text-decoration: none;
     color: var(--dark, #0f172a);
-    font-weight: 800;
-    font-size: 1.05rem;
-    letter-spacing: -0.02em;
-    transition: color 0.15s;
+    transition: opacity 0.15s;
 }
-.nav-logo:hover { color: var(--primary, #0f766e); }
-
+.nav-logo:hover { opacity: 0.82; }
+/* All logo images — horizontal wordmark, never forced square */
 .nav-logo .logo-img,
-.nav-logo img {
-    width: 32px;
-    height: 32px;
+.nav-logo img,
+.brand-logo-img {
+    display: block;
+    height: 42px;
+    width: auto;
+    max-width: 220px;
     object-fit: contain;
     flex-shrink: 0;
-    display: block;
 }
-
-/* Generic brand-logo block (suggested class) */
+/* Generic brand-logo block */
 .brand-logo {
     display: inline-flex;
     align-items: center;
-    gap: 0.65rem;
     text-decoration: none;
     color: var(--dark, #0f172a);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-}
-.brand-logo-img {
-    width: 34px;
-    height: 34px;
-    object-fit: contain;
-    flex-shrink: 0;
-    display: block;
 }
 .brand-logo-text {
     font-size: 1.15rem;
+    font-weight: 800;
     line-height: 1;
 }
-.brand-logo:hover { color: var(--primary, #0f766e); }
-
-/* Admin sidebar logo */
+.brand-logo:hover { opacity: 0.82; }
+/* Admin sidebar logo — uses unitrade-logo-light.svg on dark bg */
 .admin-logo {
     display: inline-flex;
     align-items: center;
-    gap: 0.55rem;
     text-decoration: none;
 }
 .admin-logo-img {
-    width: 32px;
-    height: 32px;
+    display: block;
+    height: 40px;
+    width: auto;
+    max-width: 180px;
     object-fit: contain;
     flex-shrink: 0;
-    display: block;
-    filter: brightness(0) invert(1); /* keep white on dark sidebar */
+    filter: none;
 }
 .admin-logo-text {
     font-size: 1.05rem;
@@ -70,17 +56,18 @@
     letter-spacing: -0.02em;
     line-height: 1;
 }
-
-/* Responsive */
+/* Responsive logo sizing */
 @media (max-width: 768px) {
   .nav-logo .logo-img,
-  .nav-logo img { width: 26px; height: 26px; }
-  .brand-logo-img { width: 28px; height: 28px; }
+  .nav-logo img,
+  .brand-logo-img { height: 36px; max-width: 180px; }
+  .admin-logo-img  { height: 34px; max-width: 150px; }
 }
 @media (max-width: 576px) {
   .nav-logo .logo-img,
-  .nav-logo img { width: 22px; height: 22px; }
-  .brand-logo-img { width: 24px; height: 24px; }
+  .nav-logo img,
+  .brand-logo-img { height: 30px; max-width: 150px; }
+  .admin-logo-img  { height: 28px; max-width: 120px; }
 }
 /* ============================================================
    UNITRADE - main.css

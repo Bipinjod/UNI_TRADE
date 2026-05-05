@@ -38,8 +38,9 @@
 
         /* ─── BRAND LOGO IMG ─── */
         .brand-logo-img {
-            width: 34px;
-            height: 34px;
+            height: 42px;
+            width: auto;
+            max-width: 220px;
             object-fit: contain;
             display: block;
             flex-shrink: 0;
@@ -543,9 +544,8 @@
     <nav class="nav">
         <div class="nav-inner">
             <div class="nav-left">
-                <a href="${pageContext.request.contextPath}/" class="nav-logo" style="display:flex;align-items:center;gap:8px;">
+                <a href="${pageContext.request.contextPath}/" class="nav-logo">
                     <img src="${pageContext.request.contextPath}/assets/images/unitrade-logo.svg" alt="UniTrade logo" class="brand-logo-img">
-                    <span>UniTrade</span>
                 </a>
                 <button class="mobile-nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="main-nav-links" onclick="this.classList.toggle('active');var navLinks=this.closest('.nav-inner').querySelector('.nav-links');navLinks.classList.toggle('nav-open');this.setAttribute('aria-expanded',navLinks.classList.contains('nav-open'))">
                     <span></span><span></span><span></span>
