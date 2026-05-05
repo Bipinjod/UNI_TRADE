@@ -18,7 +18,6 @@
         <a href="${pageContext.request.contextPath}/user/dashboard" class="nav-logo">
             <img src="${pageContext.request.contextPath}/assets/images/unitrade-logo.svg"
                  class="brand-logo-img" alt="UniTrade" onerror="this.style.display='none'">
-            <span>UniTrade</span>
         </a>
         <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
             <span></span><span></span><span></span>

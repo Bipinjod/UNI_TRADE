@@ -20,7 +20,6 @@
         <div class="nav-container">
             <a href="${pageContext.request.contextPath}/user/dashboard" class="nav-logo">
                 <img src="${pageContext.request.contextPath}/assets/images/unitrade-logo.svg" alt="UniTrade" class="brand-logo-img">
-                <span>UniTrade</span>
             </a>
             <div class="nav-links">
                 <a href="${pageContext.request.contextPath}/user/items" class="nav-link">Browse</a>
@@ -115,6 +114,9 @@
 
                                 <!-- Actions -->
                                 <div class="wishlist-actions">
+                                    <a href="${pageContext.request.contextPath}/user/items?action=detail&itemId=${item.itemId}" class="btn btn-primary btn-sm">
+                                        View Details
+                                    </a>
                                     <form method="post" action="${pageContext.request.contextPath}/user/wishlist">
                                         <input type="hidden" name="action" value="remove">
                                         <input type="hidden" name="itemId" value="${item.itemId}">
