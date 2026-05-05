@@ -21,8 +21,7 @@
         <div class="auth-brand-inner">
 
             <a href="${pageContext.request.contextPath}/" class="auth-logo">
-                <img src="${pageContext.request.contextPath}/assets/images/unitrade-logo.svg" alt="UniTrade logo" class="brand-logo-img">
-                <span class="auth-logo-text">UniTrade</span>
+                <img src="${pageContext.request.contextPath}/assets/images/unitrade-logo-light.svg" alt="UniTrade logo" class="brand-logo-img">
             </a>
 
             <div class="auth-brand-copy">

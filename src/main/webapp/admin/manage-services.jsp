@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
@@ -22,8 +22,7 @@
         <aside class="admin-sidebar">
             <div class="sidebar-header">
                 <a href="${pageContext.request.contextPath}/admin/dashboard" class="admin-logo">
-                    <img src="${pageContext.request.contextPath}/assets/images/unitrade-logo.svg" alt="UniTrade" class="admin-logo-img" onerror="this.style.display='none'">
-                    <span class="admin-logo-text">UniTrade</span>
+                    <img src="${pageContext.request.contextPath}/assets/images/unitrade-logo-light.svg" alt="UniTrade" class="admin-logo-img">
                 </a>
                 <div class="admin-badge">Admin</div>
             </div>

@@ -20,9 +20,8 @@
     <div class="auth-brand-panel">
         <div class="auth-brand-inner">
 
-            <a href="${pageContext.request.contextPath}/" class="nav-logo" style="display:flex;align-items:center;gap:8px;">
-                <img src="${pageContext.request.contextPath}/assets/images/unitrade-logo.svg" alt="UniTrade logo" class="brand-logo-img">
-                <span>UniTrade</span>
+            <a href="${pageContext.request.contextPath}/" class="auth-logo">
+                <img src="${pageContext.request.contextPath}/assets/images/unitrade-logo-light.svg" alt="UniTrade logo" class="brand-logo-img">
             </a>
 
             <div class="auth-brand-copy">

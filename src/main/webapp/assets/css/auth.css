@@ -546,6 +546,12 @@
         font-size: 1.25rem;
     }
 
+    .auth-logo img,
+    .auth-logo .brand-logo-img {
+        height: 40px;
+        max-width: 200px;
+    }
+
     .field-row {
         grid-template-columns: 1fr;
         gap: 0;

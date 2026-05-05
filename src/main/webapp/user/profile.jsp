@@ -16,9 +16,8 @@
 
     <nav class="user-nav">
         <div class="nav-container">
-            <a href="${pageContext.request.contextPath}/user/dashboard" class="nav-logo" style="display:flex;align-items:center;gap:8px;">
+            <a href="${pageContext.request.contextPath}/user/dashboard" class="nav-logo">
                 <img src="${pageContext.request.contextPath}/assets/images/unitrade-logo.svg" alt="UniTrade logo" class="brand-logo-img">
-                <span>UniTrade</span>
             </a>
             <div class="nav-links">
                 <a href="${pageContext.request.contextPath}/user/items" class="nav-link">Browse Items</a>

@@ -35,9 +35,13 @@
 
         /* Logo */
         .err-logo {
-            display: inline-flex; align-items: center; gap: 0.4rem;
-            margin-bottom: 2.25rem; font-size: 1.05rem; font-weight: 800;
-            color: var(--navy); letter-spacing: -0.4px;
+            display: inline-flex; align-items: center;
+            margin-bottom: 2.25rem;
+            text-decoration: none;
+        }
+        .err-logo .brand-logo-img {
+            height: 38px; width: auto; max-width: 200px;
+            object-fit: contain; display: block;
         }
         .err-logo .dot {
             width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
@@ -129,7 +133,6 @@
         <!-- Logo -->
         <a href="${pageContext.request.contextPath}/" class="err-logo">
             <img src="${pageContext.request.contextPath}/assets/images/unitrade-logo.svg" alt="UniTrade logo" class="brand-logo-img">
-            UniTrade
         </a>
 
         <!-- Visual -->

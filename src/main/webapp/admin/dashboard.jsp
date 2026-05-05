@@ -17,8 +17,7 @@
     <aside class="admin-sidebar">
         <div class="sidebar-header">
             <a href="${pageContext.request.contextPath}/admin/dashboard" class="admin-logo">
-                <img src="${pageContext.request.contextPath}/assets/images/unitrade-logo.svg" alt="UniTrade" class="admin-logo-img" onerror="this.style.display='none'">
-                <span class="admin-logo-text">UniTrade</span>
+                <img src="${pageContext.request.contextPath}/assets/images/unitrade-logo-light.svg" alt="UniTrade" class="admin-logo-img">
             </a>
             <div class="admin-badge">Admin</div>
         </div>
