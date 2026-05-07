@@ -60,11 +60,15 @@ public class ServiceServlet extends HttpServlet {
         if (action == null) { res.sendRedirect(req.getContextPath() + "/user/services"); return; }
 
         switch (action) {
-            case "add":    handleAdd(req, res, session, user); break;
-            case "edit":   handleEdit(req, res, session, user); break;
-            case "delete": handleDelete(req, res, session, user); break;
-            case "order":  handleOrder(req, res, session, user); break;
-            default:       res.sendRedirect(req.getContextPath() + "/user/services");
+            case "add":           handleAdd(req, res, session, user); break;
+            case "edit":          handleEdit(req, res, session, user); break;
+            case "delete":        handleDelete(req, res, session, user); break;
+            case "order":         handleOrder(req, res, session, user); break;
+            case "acceptOrder":
+            case "rejectOrder":
+            case "completeOrder":
+            case "cancelOrder":   handleOrderStatus(req, res, session, user, action); break;
+            default:              res.sendRedirect(req.getContextPath() + "/user/services");
         }
     }
 
@@ -120,6 +124,7 @@ public class ServiceServlet extends HttpServlet {
         User user = (User) session.getAttribute("loggedInUser");
         if (user == null) { res.sendRedirect(req.getContextPath() + "/auth/login"); return; }
         req.setAttribute("services", svc.getUserServices(user.getUserId()));
+        req.setAttribute("receivedOrders", soSvc.getProviderOrders(user.getUserId()));
         req.getRequestDispatcher("/user/my-services.jsp").forward(req, res);
     }
 
@@ -178,6 +183,33 @@ public class ServiceServlet extends HttpServlet {
         String result = soSvc.createOrder(order);
         session.setAttribute(result.contains("successfully") ? "success" : "error", result);
         res.sendRedirect(req.getContextPath() + "/user/services?action=detail&serviceId=" + s.getServiceId());
+    }
+
+    private void handleOrderStatus(HttpServletRequest req, HttpServletResponse res, HttpSession session, User user, String action) throws IOException {
+        String orderIdStr = req.getParameter("orderId");
+        if (orderIdStr == null) {
+            session.setAttribute("error", "Order ID required");
+            res.sendRedirect(req.getContextPath() + "/user/services?action=my");
+            return;
+        }
+        try {
+            int orderId = Integer.parseInt(orderIdStr);
+            String status = switch (action) {
+                case "acceptOrder"   -> "ACCEPTED";
+                case "rejectOrder"   -> "REJECTED";
+                case "completeOrder" -> "COMPLETED";
+                case "cancelOrder"   -> "CANCELLED";
+                default              -> null;
+            };
+            if (status != null && soSvc.updateStatus(orderId, status)) {
+                session.setAttribute("success", "Order " + status.toLowerCase() + " successfully");
+            } else {
+                session.setAttribute("error", "Failed to update order status");
+            }
+        } catch (NumberFormatException e) {
+            session.setAttribute("error", "Invalid order ID");
+        }
+        res.sendRedirect(req.getContextPath() + "/user/services?action=my");
     }
 }
 
