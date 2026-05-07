@@ -134,6 +134,7 @@ public class WishlistServlet extends HttpServlet {
                 item.setTitle(wishlist.getItemTitle());
                 item.setPrice(wishlist.getPrice());
                 item.setImagePath(wishlist.getImagePath());
+                item.setListingStatus(wishlist.getListingStatus());
                 items.add(item);
             } else {
                 // Fallback: fetch item details

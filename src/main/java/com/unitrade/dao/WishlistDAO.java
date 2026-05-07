@@ -97,18 +97,18 @@ public class WishlistDAO {
 
     /**
      * Get all wishlist items for a specific user
-     * Includes item details (title, price, image_path) via JOIN
-     * Only returns items that are approved and not sold
+     * Includes item details (title, price, image_path, listing_status) via JOIN
+     * Returns APPROVED and SOLD items so users can see which items were purchased.
      *
      * @param userId User ID
      * @return List of wishlist items with item details
      */
     public List<Wishlist> getWishlistByUserId(int userId) {
         List<Wishlist> wishlists = new ArrayList<>();
-        String sql = "SELECT w.*, i.title AS item_title, i.price, i.image_path " +
+        String sql = "SELECT w.*, i.title AS item_title, i.price, i.image_path, i.listing_status " +
                      "FROM wishlists w " +
                      "LEFT JOIN items i ON w.item_id = i.item_id " +
-                     "WHERE w.user_id = ? AND i.listing_status = 'APPROVED' " +
+                     "WHERE w.user_id = ? AND i.listing_status IN ('APPROVED', 'SOLD') " +
                      "ORDER BY w.created_at DESC";
 
         try (Connection conn = DBConnection.getConnection();
@@ -161,6 +161,12 @@ public class WishlistDAO {
 
             try {
                 wishlist.setImagePath(rs.getString("image_path"));
+            } catch (SQLException e) {
+                // Column might not exist in some queries
+            }
+
+            try {
+                wishlist.setListingStatus(rs.getString("listing_status"));
             } catch (SQLException e) {
                 // Column might not exist in some queries
             }

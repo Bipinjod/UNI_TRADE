@@ -69,8 +69,22 @@
 
                         <div class="detail-meta">
                             <span>Condition: ${item.itemCondition}</span>
-                            <span>Status: ${item.listingStatus}</span>
+                            <span>Status:
+                                <c:choose>
+                                    <c:when test="${item.listingStatus == 'SOLD'}"><span class="badge badge-sold">Sold</span></c:when>
+                                    <c:when test="${item.listingStatus == 'APPROVED'}"><span class="badge badge-success">Available</span></c:when>
+                                    <c:when test="${item.listingStatus == 'PENDING'}"><span class="badge badge-warning">Pending Review</span></c:when>
+                                    <c:otherwise><span class="badge badge-secondary">${item.listingStatus}</span></c:otherwise>
+                                </c:choose>
+                            </span>
                         </div>
+
+                        <c:if test="${item.listingStatus == 'SOLD'}">
+                            <div class="alert alert-sold" style="margin:1rem 0; background:rgba(15,118,110,.08); border:1.5px solid rgba(15,118,110,.25); border-radius:12px; padding:.875rem 1.125rem; display:flex; align-items:center; gap:.625rem; color:#0f766e; font-weight:500;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                This item has been sold and is no longer available for purchase.
+                            </div>
+                        </c:if>
 
                         <p class="detail-desc">${item.description}</p>
 

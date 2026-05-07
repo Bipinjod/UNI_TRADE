@@ -186,6 +186,16 @@ public class ItemService {
     }
 
     /**
+     * Get all browsable items (approved + sold) for the browse page
+     * SOLD items are shown with a SOLD badge so users can see an item was purchased.
+     *
+     * @return List of browsable items
+     */
+    public List<Item> getBrowsableItems() {
+        return itemDAO.getAllBrowsableItems();
+    }
+
+    /**
      * Get all items posted by a specific user
      *
      * @param userId User ID

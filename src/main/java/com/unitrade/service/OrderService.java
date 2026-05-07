@@ -120,7 +120,8 @@ public class OrderService {
     }
 
     /**
-     * Update order status with validation
+     * Update order status with validation.
+     * When an order is COMPLETED, the associated item is automatically marked as SOLD.
      *
      * @param orderId Order ID to update
      * @param status New status
@@ -143,7 +144,17 @@ public class OrderService {
             return false;
         }
 
-        return orderDAO.updateOrderStatus(orderId, upperStatus);
+        boolean updated = orderDAO.updateOrderStatus(orderId, upperStatus);
+
+        // When order is COMPLETED, automatically mark the item as SOLD
+        if (updated && "COMPLETED".equals(upperStatus)) {
+            com.unitrade.model.Order order = orderDAO.getOrderById(orderId);
+            if (order != null && order.getItemId() > 0) {
+                itemDAO.updateItemStatus(order.getItemId(), "SOLD");
+            }
+        }
+
+        return updated;
     }
 
     /**

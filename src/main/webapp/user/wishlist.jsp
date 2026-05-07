@@ -81,15 +81,19 @@
                     <c:forEach var="item" items="${wishlistItems}">
                         <div class="wishlist-card">
                             <!-- Item Image -->
-                            <div class="wishlist-image-wrapper">
+                            <div class="wishlist-image-wrapper" style="position:relative;">
                                 <c:choose>
                                     <c:when test="${not empty item.imagePath}">
-                                        <img src="${pageContext.request.contextPath}/assets/uploads/${item.imagePath}" alt="${item.title}" class="wishlist-image">
+                                        <img src="${pageContext.request.contextPath}/assets/uploads/${item.imagePath}" alt="${item.title}" class="wishlist-image"
+                                             style="${item.listingStatus == 'SOLD' ? 'opacity:0.55;' : ''}">
                                     </c:when>
                                     <c:otherwise>
                                         <div class="wishlist-image-placeholder"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.4"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
                                     </c:otherwise>
                                 </c:choose>
+                                <c:if test="${item.listingStatus == 'SOLD'}">
+                                    <div style="position:absolute;top:10px;left:10px;background:#0f766e;color:#fff;font-size:.7rem;font-weight:700;letter-spacing:.06em;padding:.25rem .625rem;border-radius:999px;text-transform:uppercase;">SOLD</div>
+                                </c:if>
 
                                 <!-- Remove Button -->
                                 <form method="post" action="${pageContext.request.contextPath}/user/wishlist" class="remove-form">
@@ -112,9 +116,16 @@
                                     </div>
                                 </c:if>
 
+                                <c:if test="${item.listingStatus == 'SOLD'}">
+                                    <div style="margin:.4rem 0 .75rem; font-size:.78rem; color:#0f766e; font-weight:600; display:flex; align-items:center; gap:.3rem;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                        This item has been sold
+                                    </div>
+                                </c:if>
+
                                 <!-- Actions -->
                                 <div class="wishlist-actions">
-                                    <a href="${pageContext.request.contextPath}/user/items?action=detail&itemId=${item.itemId}" class="btn btn-primary btn-sm">
+                                    <a href="${pageContext.request.contextPath}/user/items?action=detail&itemId=${item.itemId}" class="btn btn-${item.listingStatus == 'SOLD' ? 'ghost' : 'primary'} btn-sm">
                                         View Details
                                     </a>
                                     <form method="post" action="${pageContext.request.contextPath}/user/wishlist">

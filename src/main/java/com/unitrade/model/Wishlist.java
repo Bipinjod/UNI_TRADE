@@ -23,6 +23,7 @@ public class Wishlist {
     private String itemTitle;
     private BigDecimal price;
     private String imagePath;
+    private String listingStatus;
 
     /**
      * Default constructor
@@ -106,6 +107,14 @@ public class Wishlist {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public String getListingStatus() {
+        return listingStatus;
+    }
+
+    public void setListingStatus(String listingStatus) {
+        this.listingStatus = listingStatus;
     }
 
     @Override
