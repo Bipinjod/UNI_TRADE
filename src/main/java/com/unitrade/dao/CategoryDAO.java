@@ -149,6 +149,13 @@ public class CategoryDAO {
         return list;
     }
 
+    /**
+     * Get all categories (active and inactive) filtered by type.
+     * Use this for admin panels where inactive categories should also be shown.
+     *
+     * @param type Category type string (ITEM, SERVICE, or REQUEST)
+     * @return List of all Category objects (regardless of status) matching the type
+     */
     public List<Category> getCategoriesByType(String type) {
         List<Category> list = new ArrayList<>();
         String sql = "SELECT * FROM categories WHERE category_type=? ORDER BY category_name";
