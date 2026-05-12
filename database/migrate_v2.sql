@@ -3,16 +3,55 @@
 
 USE unitrade_db;
 
--- 1. Add category_type to categories if it doesn't exist
-ALTER TABLE categories
-  ADD COLUMN IF NOT EXISTS category_type ENUM('ITEM','SERVICE','REQUEST') NOT NULL DEFAULT 'ITEM' AFTER category_name;
+-- 1. Add category_type column to categories (MySQL 5.7 compatible)
+DROP PROCEDURE IF EXISTS _ut_add_category_type;
+DELIMITER $$
+CREATE PROCEDURE _ut_add_category_type()
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME  = 'categories'
+          AND COLUMN_NAME = 'category_type'
+    ) THEN
+        ALTER TABLE categories
+            ADD COLUMN category_type ENUM('ITEM','SERVICE','REQUEST') NOT NULL DEFAULT 'ITEM'
+            AFTER category_name;
+    END IF;
+END$$
+DELIMITER ;
+CALL _ut_add_category_type();
+DROP PROCEDURE IF EXISTS _ut_add_category_type;
 
--- 2. Drop old unique key and add new composite unique key if not already there
-ALTER TABLE categories
-  DROP INDEX IF EXISTS category_name;
+-- 2. Replace old unique key with composite unique key (MySQL 5.7 compatible)
+DROP PROCEDURE IF EXISTS _ut_fix_cat_index;
+DELIMITER $$
+CREATE PROCEDURE _ut_fix_cat_index()
+BEGIN
+    -- Drop old single-column unique key if it exists
+    IF EXISTS (
+        SELECT 1 FROM INFORMATION_SCHEMA.STATISTICS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME  = 'categories'
+          AND INDEX_NAME  = 'category_name'
+    ) THEN
+        ALTER TABLE categories DROP INDEX category_name;
+    END IF;
 
-ALTER TABLE categories
-  ADD UNIQUE INDEX IF NOT EXISTS uq_cat_name_type (category_name, category_type);
+    -- Add composite unique key if it doesn't already exist
+    IF NOT EXISTS (
+        SELECT 1 FROM INFORMATION_SCHEMA.STATISTICS
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME  = 'categories'
+          AND INDEX_NAME  = 'uq_cat_name_type'
+    ) THEN
+        ALTER TABLE categories
+            ADD UNIQUE INDEX uq_cat_name_type (category_name, category_type);
+    END IF;
+END$$
+DELIMITER ;
+CALL _ut_fix_cat_index();
+DROP PROCEDURE IF EXISTS _ut_fix_cat_index;
 
 -- 3. Create services table
 CREATE TABLE IF NOT EXISTS services (
@@ -78,7 +117,19 @@ CREATE TABLE IF NOT EXISTS request_responses (
     FOREIGN KEY (responder_id) REFERENCES users(user_id)            ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- 7. Create admin_logs table
+-- 7. Create remember_tokens table (persistent "Remember Me" login)
+CREATE TABLE IF NOT EXISTS remember_tokens (
+    token_id        INT AUTO_INCREMENT PRIMARY KEY,
+    user_id         INT          NOT NULL,
+    selector        VARCHAR(32)  NOT NULL UNIQUE,
+    validator_hash  VARCHAR(255) NOT NULL,
+    expires_at      DATETIME     NOT NULL,
+    created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_rt_user (user_id)
+) ENGINE=InnoDB;
+
+-- 8. Create admin_logs table
 CREATE TABLE IF NOT EXISTS admin_logs (
     log_id             INT AUTO_INCREMENT PRIMARY KEY,
     admin_id           INT          NOT NULL,
@@ -91,7 +142,7 @@ CREATE TABLE IF NOT EXISTS admin_logs (
     INDEX idx_logs_admin (admin_id)
 ) ENGINE=InnoDB;
 
--- 8. Ensure admin user exists (skip if already present)
+-- 9. Ensure admin user exists (skip if already present)
 INSERT IGNORE INTO users (full_name, email, phone, password_hash, role, approval_status, account_status,
                            college_name, course_name, academic_year)
 VALUES ('Admin User', 'admin@unitrade.com', '9800000000',
@@ -99,7 +150,7 @@ VALUES ('Admin User', 'admin@unitrade.com', '9800000000',
         'ADMIN', 'APPROVED', 'ACTIVE',
         'UniTrade Admin', 'Platform Administration', '2026');
 
--- 9. Insert missing item categories (using INSERT IGNORE to skip duplicates)
+-- 10. Insert missing item categories (using INSERT IGNORE to skip duplicates)
 INSERT IGNORE INTO categories (category_name, category_type, description, status) VALUES
 ('Textbooks',       'ITEM', 'Academic textbooks and study materials',  'ACTIVE'),
 ('Electronics',     'ITEM', 'Laptops, phones, chargers, accessories', 'ACTIVE'),
@@ -110,7 +161,7 @@ INSERT IGNORE INTO categories (category_name, category_type, description, status
 ('Calculators',     'ITEM', 'Scientific and graphing calculators',    'ACTIVE'),
 ('Project Kits',    'ITEM', 'Arduino, Raspberry Pi, breadboards',     'ACTIVE');
 
--- 10. Insert service categories
+-- 11. Insert service categories
 INSERT IGNORE INTO categories (category_name, category_type, description, status) VALUES
 ('Tutoring',    'SERVICE', 'Academic tutoring and coaching',        'ACTIVE'),
 ('Design',      'SERVICE', 'Graphic design and UI/UX work',        'ACTIVE'),
@@ -118,7 +169,7 @@ INSERT IGNORE INTO categories (category_name, category_type, description, status
 ('Writing',     'SERVICE', 'Essay writing, editing, proofreading', 'ACTIVE'),
 ('Photography', 'SERVICE', 'Photo and video shoots',               'ACTIVE');
 
--- 11. Insert request categories
+-- 12. Insert request categories
 INSERT IGNORE INTO categories (category_name, category_type, description, status) VALUES
 ('Academic Help',  'REQUEST', 'Need help with coursework',         'ACTIVE'),
 ('Tech Support',   'REQUEST', 'Software or hardware issues',       'ACTIVE'),

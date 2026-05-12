@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="c"   uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn"  uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -542,6 +544,7 @@
             .nav-cta { padding: 0.35rem 0.75rem; font-size: 0.72rem; }
             .bottom-cta { padding: 1.75rem 1.25rem; }
         }
+
     </style>
 </head>
 <body>
@@ -595,27 +598,73 @@
 
         <div class="hero-visual">
             <div class="depth-card"></div>
-            <div class="mock-card">
-                <div class="mock-img">
-                    <div class="mock-img-icon"></div>
-                    <span class="mock-tag">Like New</span>
-                </div>
-                <div class="mock-body">
-                    <div class="mock-cat">Textbooks</div>
-                    <div class="mock-title">Java: The Complete Reference</div>
-                    <div class="mock-desc">11th Edition &middot; Herbert Schildt</div>
-                    <div class="mock-footer">
-                        <span class="mock-price">Rs. 350</span>
-                        <div class="mock-seller">
-                            <div class="mock-avatar">AP</div>
-                            <span class="mock-name">Aarav P.</span>
+            <c:choose>
+                <c:when test="${not empty heroItem}">
+                    <a href="${pageContext.request.contextPath}/user/items?action=detail&itemId=${heroItem.itemId}" style="text-decoration:none;">
+                    <div class="mock-card">
+                        <div class="mock-img">
+                            <c:choose>
+                                <c:when test="${not empty heroItem.imagePath}">
+                                    <img src="${pageContext.request.contextPath}/assets/uploads/${heroItem.imagePath}"
+                                         alt="${heroItem.title}"
+                                         style="width:100%;height:100%;object-fit:cover;">
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="mock-img-icon"></div>
+                                </c:otherwise>
+                            </c:choose>
+                            <span class="mock-tag">
+                                <c:choose>
+                                    <c:when test="${heroItem.itemCondition == 'NEW'}">New</c:when>
+                                    <c:when test="${heroItem.itemCondition == 'LIKE_NEW'}">Like New</c:when>
+                                    <c:when test="${heroItem.itemCondition == 'GOOD'}">Good</c:when>
+                                    <c:otherwise>Used</c:otherwise>
+                                </c:choose>
+                            </span>
+                        </div>
+                        <div class="mock-body">
+                            <div class="mock-cat">${heroItem.categoryName}</div>
+                            <div class="mock-title">${heroItem.title}</div>
+                            <div class="mock-footer">
+                                <span class="mock-price">Rs. <fmt:formatNumber value="${heroItem.price}" pattern="#,##0"/></span>
+                                <div class="mock-seller">
+                                    <div class="mock-avatar">
+                                        <c:choose>
+                                            <c:when test="${not empty heroItem.sellerName}">${fn:substring(heroItem.sellerName, 0, 1)}</c:when>
+                                            <c:otherwise>?</c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                    <span class="mock-name">${heroItem.sellerName}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                    </a>
+                </c:when>
+                <c:otherwise>
+                    <%-- Static fallback when database has no approved items --%>
+                    <div class="mock-card">
+                        <div class="mock-img">
+                            <div class="mock-img-icon"></div>
+                            <span class="mock-tag">Like New</span>
+                        </div>
+                        <div class="mock-body">
+                            <div class="mock-cat">Textbooks</div>
+                            <div class="mock-title">Java: The Complete Reference</div>
+                            <div class="mock-desc">11th Edition &middot; Herbert Schildt</div>
+                            <div class="mock-footer">
+                                <span class="mock-price">Rs. 350</span>
+                                <div class="mock-seller">
+                                    <div class="mock-avatar">AP</div>
+                                    <span class="mock-name">Aarav P.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </c:otherwise>
+            </c:choose>
         </div>
     </section>
-
 
 
     <div class="section-line"><hr></div>
