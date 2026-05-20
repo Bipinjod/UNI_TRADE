@@ -132,6 +132,14 @@ public class RememberTokenDAO {
 
     // ─── Private helper ───────────────────────────────────────────────────────
 
+    /**
+     * Map a single ResultSet row to a {@link RememberToken} object.
+     * Converts the JDBC {@code Timestamp} expiry value to a {@code LocalDateTime}.
+     *
+     * @param rs ResultSet positioned at the current row
+     * @return Populated RememberToken object
+     * @throws SQLException if a required column cannot be read
+     */
     private RememberToken mapRow(ResultSet rs) throws SQLException {
         RememberToken token = new RememberToken();
         token.setTokenId(rs.getInt("token_id"));
