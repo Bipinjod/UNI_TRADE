@@ -119,7 +119,6 @@
                         <input type="checkbox" name="rememberMe">
                         <span>Remember me</span>
                     </label>
-                    <a href="#" class="auth-link-sm">Forgot password?</a>
                 </div>
 
                 <button type="submit" class="auth-btn">Sign in</button>
