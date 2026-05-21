@@ -16,6 +16,7 @@ The platform lets students buy and sell second-hand items, offer services like t
 | Sandesh | `sandesh` | Login and registration page UI, mobile responsiveness |
 | Ushudha | `ushudha` | DAO layer, service layer classes, database integration |
 | Apshana | `apshana` | User-facing pages, item listings, browsing and search UI |
+| Sujal | `Sujal` | UI/UX design, responsisvenss  |
 
 ---
 
