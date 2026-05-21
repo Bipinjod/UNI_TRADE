@@ -163,6 +163,37 @@ public class ItemDAO {
     }
 
     /**
+     * Get all browsable items (listing_status = 'APPROVED' or 'SOLD')
+     * SOLD items are included so users can see an item was sold.
+     * Includes category name and seller name via JOIN
+     *
+     * @return List of browsable items (approved + sold)
+     */
+    public List<Item> getAllBrowsableItems() {
+        List<Item> items = new ArrayList<>();
+        String sql = "SELECT i.*, c.category_name, u.full_name AS seller_name " +
+                     "FROM items i " +
+                     "LEFT JOIN categories c ON i.category_id = c.category_id " +
+                     "LEFT JOIN users u ON i.user_id = u.user_id " +
+                     "WHERE i.listing_status IN ('APPROVED', 'SOLD') " +
+                     "ORDER BY i.listing_status ASC, i.created_at DESC";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                items.add(mapResultSetToItem(rs, true));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return items;
+    }
+
+    /**
      * Get all items posted by a specific user
      * Includes category name via JOIN
      *
@@ -211,7 +242,7 @@ public class ItemDAO {
             "FROM items i " +
             "LEFT JOIN categories c ON i.category_id = c.category_id " +
             "LEFT JOIN users u ON i.user_id = u.user_id " +
-            "WHERE i.listing_status = 'APPROVED'"
+            "WHERE i.listing_status IN ('APPROVED', 'SOLD')"
         );
 
         // Add keyword filter if provided

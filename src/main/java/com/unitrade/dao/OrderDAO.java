@@ -144,6 +144,40 @@ public class OrderDAO {
     }
 
     /**
+     * Get a single order by its ID
+     *
+     * @param orderId Order ID to look up
+     * @return Order object if found, null otherwise
+     */
+    public Order getOrderById(int orderId) {
+        String sql = "SELECT o.*, i.title AS item_title, " +
+                     "u_seller.full_name AS seller_name, " +
+                     "u_buyer.full_name AS buyer_name " +
+                     "FROM item_orders o " +
+                     "LEFT JOIN items i ON o.item_id = i.item_id " +
+                     "LEFT JOIN users u_seller ON o.seller_id = u_seller.user_id " +
+                     "LEFT JOIN users u_buyer ON o.buyer_id = u_buyer.user_id " +
+                     "WHERE o.order_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, orderId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToOrder(rs, true);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
      * Helper method to map ResultSet to Order object
      *
      * @param rs ResultSet from database query

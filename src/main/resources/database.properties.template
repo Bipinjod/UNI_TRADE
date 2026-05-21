@@ -1,0 +1,30 @@
+# ==============================================
+# UniTrade Database Configuration Template
+# ==============================================
+#
+# IMPORTANT:
+# 1. Copy this file to database.properties (same directory)
+# 2. Update with your actual database credentials
+# 3. NEVER commit database.properties with real credentials to Git
+#
+# This template is tracked by Git, but database.properties is ignored
+# ==============================================
+
+# Database Connection URL
+# Format: jdbc:mysql://hostname:port/database_name?parameters
+db.url=jdbc:mysql://localhost:3306/unitrade_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&characterEncoding=UTF-8
+
+# Database Credentials
+db.username=root
+db.password=your_mysql_password_here
+
+# JDBC Driver Class (MySQL 8+)
+db.driver=com.mysql.cj.jdbc.Driver
+
+# ==============================================
+# Notes
+# ==============================================
+# - Run database/unitrade_final_schema.sql first to create the database
+# - Default admin login: admin@unitrade.com / admin123
+# ==============================================
+

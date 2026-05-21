@@ -192,6 +192,8 @@ work/
 *Audit*
 *template*
 *Template*
+# But always keep the DB config template so teammates know what to fill in
+!src/main/resources/database.properties.template
 FOUNDATION_COMPLETE.md
 
 # ========================================

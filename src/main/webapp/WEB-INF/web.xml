@@ -75,6 +75,16 @@
         <location>/error.jsp</location>
     </error-page>
 
+    <!-- MIME Type Mappings -->
+    <mime-mapping>
+        <extension>svg</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svgz</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+
     <!-- JSP Configuration -->
     <jsp-config>
         <jsp-property-group>
