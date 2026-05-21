@@ -1,232 +1,186 @@
-# 🎓 UniTrade – Student Marketplace Platform
+# UniTrade – Student Marketplace Platform
 
-A peer-to-peer marketplace web app for university students to **buy/sell items**, **offer services**, and **post help requests**.
+UniTrade is a web application we built as our second-year group project. The idea came from a real problem we noticed — students at our university often want to sell old textbooks, offer tutoring, or ask for help with tasks, but there is no proper platform for it. So we decided to build one ourselves.
 
-Built with **Java Servlets + JSP (MVC)**, **MySQL**, deployed on **Apache Tomcat**.
+The platform lets students buy and sell second-hand items, offer services like tutoring or printing, and post help requests that other students can respond to. Everything goes through an admin panel where new users get approved before they can access the marketplace.
 
----
-
-## 📋 Prerequisites
-
-Make sure the following are installed before you begin:
-
-| Tool | Version | Download |
-|------|---------|----------|
-| JDK | 17+ | https://www.oracle.com/java/technologies/downloads/#java17 |
-| MySQL | 8.0+ | https://dev.mysql.com/downloads/installer/ |
-| Apache Tomcat | 10.1+ | https://tomcat.apache.org/download-10.cgi |
-| IntelliJ IDEA | Any | https://www.jetbrains.com/idea/ (Community is fine) |
-| Git | Any | https://git-scm.com/ |
-
-> Maven is **not required** separately — the project includes `mvnw` / `mvnw.cmd` (Maven Wrapper).
+**Tech used:** Java Servlets + JSP (MVC pattern), MySQL, Apache Tomcat 10
 
 ---
 
-## 🚀 Setup in 5 Steps
+## Team Members
 
-### Step 1 — Clone the Repository
+| Name | Branch | Contribution |
+|------|--------|-------------|
+| Bipin | `bipin` | Project lead, authentication system, filters, session management, Remember Me |
+| Sandesh | `sandesh` | Login and registration page UI, mobile responsiveness |
+| Ushudha | `ushudha` | DAO layer, service layer classes, database integration |
+| Apshana | `apshana` | User-facing pages, item listings, browsing and search UI |
+
+---
+
+## What the App Does
+
+**For Students (Users):**
+- Register an account and wait for admin approval
+- Post items for sale with images and price
+- Browse and search items or services posted by others
+- Offer services (tutoring, errands, design work, etc.)
+- Post help requests and get responses from other students
+- Manage their own orders, wishlist, and profile
+
+**For Admin:**
+- Approve or reject new user registrations
+- Manage all listings, services, and help requests
+- View a dashboard with platform activity overview
+- Handle user accounts and reported content
+
+---
+
+## Prerequisites
+
+You will need these installed before running the project:
+
+| Tool | Version |
+|------|---------|
+| JDK | 17 or above |
+| MySQL | 8.0 or above |
+| Apache Tomcat | 10.1 |
+| IntelliJ IDEA | Any version (Community edition works fine) |
+
+Maven does not need to be installed separately — the project already includes `mvnw.cmd` (Maven Wrapper).
+
+---
+
+## How to Run It
+
+### 1. Clone the repo
 
 ```bash
 git clone https://github.com/Bipinjod/UNI_TRADE.git
 cd UNI_TRADE
 ```
 
----
+### 2. Set up the database
 
-### Step 2 — Set Up the Database
-
-#### 2a. Start MySQL and create the database + tables
+Run the SQL file to create the database and all the tables:
 
 ```bash
 mysql -u root -p < database/unitrade_final_schema.sql
 ```
 
-This will:
-- Create the `unitrade_db` database (if it doesn't exist)
-- Create all tables (users, items, services, orders, categories, etc.)
-- Insert default categories and an admin account
+This creates the `unitrade_db` database, all tables, default categories, and an admin account.
 
-> **Default admin login** → `admin@unitrade.com` / `admin123`
+Default admin login: `admin@unitrade.com` / `admin123`
 
-#### 2b. (Optional) Verify it worked
-
+To verify it worked:
 ```sql
 mysql -u root -p
 USE unitrade_db;
 SHOW TABLES;
 ```
 
----
+### 3. Add your database credentials
 
-### Step 3 — Configure Database Credentials
+Copy the template file:
 
-```bash
-# Copy the template
-cp src/main/resources/database.properties.template src/main/resources/database.properties
+```powershell
+Copy-Item src\main\resources\database.properties.template src\main\resources\database.properties
 ```
 
-> On Windows PowerShell:
-> ```powershell
-> Copy-Item src\main\resources\database.properties.template src\main\resources\database.properties
-> ```
-
-Now open `src/main/resources/database.properties` and fill in **your** MySQL password:
+Then open `database.properties` and enter your MySQL password:
 
 ```properties
 db.url=jdbc:mysql://localhost:3306/unitrade_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&characterEncoding=UTF-8
 db.username=root
-db.password=YOUR_MYSQL_PASSWORD_HERE
+db.password=YOUR_PASSWORD_HERE
 db.driver=com.mysql.cj.jdbc.Driver
 ```
 
-> ⚠️ `database.properties` is in `.gitignore` — **never commit it with real credentials**.
+> This file is listed in `.gitignore` so credentials are never accidentally committed.
 
----
-
-### Step 4 — Build the Project
+### 4. Build the project
 
 ```powershell
-# Windows
 .\mvnw.cmd clean package -DskipTests
 ```
 
-```bash
-# macOS / Linux
-./mvnw clean package -DskipTests
-```
+You should see `BUILD SUCCESS` at the end with a `unitrade.war` file generated in `/target`.
 
-Expected output:
-```
-[INFO] BUILD SUCCESS
-[INFO] Building war: D:\...\target\unitrade.war
-```
+### 5. Deploy on Tomcat via IntelliJ
 
----
+1. Open the project folder in IntelliJ IDEA
+2. Wait for Maven to finish importing (progress bar at the bottom)
+3. Go to `Run → Edit Configurations → + → Tomcat Server → Local`
+4. Under **Server** tab: point to your Tomcat installation folder
+5. Under **Deployment** tab: click `+` → `Artifact` → select `UniTrade:war exploded`
+6. Set **Application context** to `/unitrade`
+7. Click Run — your browser should open at `http://localhost:8080/unitrade/`
 
-### Step 5 — Deploy and Run
-
-#### Option A: IntelliJ IDEA (Recommended)
-
-1. **Open project** → `File → Open → select the cloned folder`
-2. Wait for Maven to import (bottom progress bar)
-3. **Add Tomcat** → `Run → Edit Configurations → + → Tomcat Server → Local`
-   - Under **Server** tab: point to your Tomcat installation directory
-   - Under **Deployment** tab: click `+` → `Artifact` → select `UniTrade:war exploded`
-   - Set **Application context** to `/unitrade`
-4. Click ▶ **Run**
-5. Browser opens → `http://localhost:8080/unitrade/`
-
-#### Option B: Manual WAR Deploy
-
+**Manual deploy (alternative):**
 ```powershell
-# Copy WAR to Tomcat webapps
 Copy-Item target\unitrade.war "C:\path\to\tomcat\webapps\"
-
-# Start Tomcat
 C:\path\to\tomcat\bin\startup.bat
 ```
 
-Access at: **http://localhost:8080/unitrade/**
-
 ---
 
-## 🔑 Default Accounts
-
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@unitrade.com | admin123 |
-
-> Regular users must register and wait for admin approval before they can log in.
-
----
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 UniTrade/
 ├── src/main/
 │   ├── java/com/unitrade/
-│   │   ├── controller/        # Servlets (user/, admin/, auth/, publicweb/)
-│   │   ├── dao/               # Database Access Objects
-│   │   ├── service/           # Business logic layer
-│   │   ├── model/             # POJOs / Entity classes
-│   │   ├── filter/            # Servlet filters (auth, role checks)
-│   │   └── util/              # Helpers (DBConnection, CookieUtil, etc.)
+│   │   ├── controller/     — Servlets that handle all HTTP requests
+│   │   ├── dao/            — Database Access Objects (one per table)
+│   │   ├── service/        — Business logic sitting between controller and DAO
+│   │   ├── model/          — Plain Java classes representing database entities
+│   │   ├── filter/         — Authentication filters and role-based access control
+│   │   └── util/           — DBConnection, PasswordUtil, CookieUtil, SessionUtil
 │   ├── resources/
-│   │   ├── database.properties          ← YOU CREATE THIS (gitignored)
-│   │   └── database.properties.template ← committed, safe to share
+│   │   └── database.properties.template
 │   └── webapp/
-│       ├── assets/css/        # main.css, auth.css, user.css, admin.css
-│       ├── assets/js/
-│       ├── assets/uploads/    # User-uploaded images (gitignored)
-│       ├── user/              # User JSP pages
-│       ├── admin/             # Admin JSP pages
-│       ├── auth/              # Login / Register pages
-│       └── WEB-INF/web.xml    # Servlet mappings
+│       ├── user/           — JSP pages for logged-in students
+│       ├── admin/          — JSP pages for admin panel
+│       ├── auth/           — Login and registration pages
+│       └── assets/         — CSS stylesheets, JavaScript, uploaded images
 ├── database/
-│   ├── unitrade_final_schema.sql  ← run this first!
-│   └── migrate_v2.sql
+│   └── unitrade_final_schema.sql
 └── pom.xml
 ```
 
 ---
 
-## 🐛 Troubleshooting
+## Common Issues
 
-### ❌ `database.properties` not found / DB connection error
+**Database connection error** — Make sure MySQL is running and your password in `database.properties` is correct. Also confirm you ran the SQL schema file first.
 
-- Did you copy the template and fill in your password? See Step 3.
-- Is MySQL running? Try: `mysql -u root -p`
-- Check MySQL service: `net start MySQL80` (Windows)
-
-### ❌ BUILD FAILURE – Java version
-
-- Ensure JDK **17** (not JRE, not JDK 11/21) is set as `JAVA_HOME`
-- Check: `java -version` and `javac -version` in a new terminal
-
-### ❌ Port 8080 already in use
-
+**Port 8080 already in use:**
 ```powershell
-# Find what's using port 8080
 netstat -ano | findstr :8080
-
-# Kill it (replace 1234 with actual PID)
-taskkill /PID 1234 /F
+taskkill /PID <PID_NUMBER> /F
 ```
 
-### ❌ 404 on all pages
+**404 on all pages** — Check that the application context in your Tomcat config is set to `/unitrade`.
 
-- Ensure Application Context is set to `/unitrade` in Tomcat run config
-- Redeploy the artifact after rebuild
+**Build fails on Java version** — The project needs JDK 17. Run `java -version` in terminal to confirm.
 
-### ❌ Images not showing after upload
-
-- Ensure the `src/main/webapp/assets/uploads/items/` folder exists  
-  (it has a `.gitkeep` file so it should be cloned correctly)
+**Images not showing after upload** — Make sure `src/main/webapp/assets/uploads/items/` exists (there is a `.gitkeep` file in it so it should be there after cloning).
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Backend | Java 17, Jakarta Servlets 6.0, JSP 3.1 |
-| Frontend | JSP, JSTL, vanilla CSS + JS |
+| Backend | Java 17, Jakarta Servlets 6.0, JSP |
+| Frontend | JSP, JSTL, CSS, vanilla JavaScript |
 | Database | MySQL 8.0 |
-| Build | Maven (wrapper included) |
 | Server | Apache Tomcat 10.1 |
-| Security | jBCrypt password hashing |
+| Build | Maven (wrapper included) |
+| Security | jBCrypt password hashing, split-token Remember Me |
 
 ---
 
-## 👥 Contributing
-
-1. Create your feature branch: `git checkout -b feature/your-feature`
-2. Commit your changes: `git commit -m "Add your feature"`
-3. Push to the branch: `git push origin feature/your-feature`
-4. Open a Pull Request to `main`
-
----
-
-*Last updated: May 2026*
+*Group project — BSc (Hons) Computing, 2025/2026*
 
